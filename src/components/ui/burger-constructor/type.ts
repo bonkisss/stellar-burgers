@@ -1,8 +1,10 @@
+import { TOrder } from '@utils-types';
+
 export type BurgerConstructorUIProps = {
   constructorItems: any;
   orderRequest: boolean;
   price: number;
-  orderModalData: { number: number } | null;
+  orderModalData: TOrder | null;
   onOrderClick: () => void;
   closeOrderModal: () => void;
 };
