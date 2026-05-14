@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import styles from './app-header.module.css';
 import { TAppHeaderUIProps } from './type';
+import { NavLink, Link } from 'react-router-dom';
 import {
   BurgerIcon,
   ListIcon,
@@ -8,28 +9,53 @@ import {
   ProfileIcon
 } from '@zlden/react-developer-burger-ui-components';
 
-export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
+export const AppHeaderUI: FC<TAppHeaderUIProps> = ({
+  userName,
+  pathname = ''
+}) => (
   <header className={styles.header}>
     <nav className={`${styles.menu} p-4`}>
       <div className={styles.menu_part_left}>
-        <>
-          <BurgerIcon type={'primary'} />
+        <NavLink
+          to='/'
+          className={({ isActive }) =>
+            `${styles.link} ${isActive ? styles.link_active : ''}`
+          }
+          end
+        >
+          <BurgerIcon type={pathname === '/' ? 'primary' : 'secondary'} />
           <p className='text text_type_main-default ml-2 mr-10'>Конструктор</p>
-        </>
-        <>
-          <ListIcon type={'primary'} />
+        </NavLink>
+        <NavLink
+          to='/feed'
+          className={({ isActive }) =>
+            `${styles.link} ${isActive ? styles.link_active : ''}`
+          }
+        >
+          <ListIcon
+            type={pathname.startsWith('/feed') ? 'primary' : 'secondary'}
+          />
           <p className='text text_type_main-default ml-2'>Лента заказов</p>
-        </>
+        </NavLink>
       </div>
-      <div className={styles.logo}>
+      <Link to='/' className={styles.logo}>
         <Logo className='' />
-      </div>
-      <div className={styles.link_position_last}>
-        <ProfileIcon type={'primary'} />
+      </Link>
+      <NavLink
+        to='/profile'
+        className={({ isActive }) =>
+          `${styles.link} ${styles.link_position_last} ${
+            isActive ? styles.link_active : ''
+          }`
+        }
+      >
+        <ProfileIcon
+          type={pathname.startsWith('/profile') ? 'primary' : 'secondary'}
+        />
         <p className='text text_type_main-default ml-2'>
           {userName || 'Личный кабинет'}
         </p>
-      </div>
+      </NavLink>
     </nav>
   </header>
 );
