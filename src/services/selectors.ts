@@ -1,3 +1,4 @@
+import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from './store';
 
 export const selectIngredients = (state: RootState) => state.ingredients.items;
@@ -9,15 +10,16 @@ export const selectIngredientsError = (state: RootState) =>
 export const selectFeedOrders = (state: RootState) => state.feed.orders;
 export const selectFeedIsLoading = (state: RootState) => state.feed.isLoading;
 export const selectFeed = (state: RootState) => state.feed;
-export const selectFeedAndProfileOrders = (state: RootState) => [
-  ...state.feed.orders,
-  ...state.profileOrders.orders
-];
 
 export const selectProfileOrders = (state: RootState) =>
   state.profileOrders.orders;
 export const selectProfileOrdersIsLoading = (state: RootState) =>
   state.profileOrders.isLoading;
+
+export const selectFeedAndProfileOrders = createSelector(
+  [selectFeedOrders, selectProfileOrders],
+  (feedOrders, profileOrders) => [...feedOrders, ...profileOrders]
+);
 
 export const selectUser = (state: RootState) => state.user.user;
 export const selectUserState = (state: RootState) => state.user;

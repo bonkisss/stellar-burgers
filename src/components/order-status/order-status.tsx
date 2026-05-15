@@ -6,8 +6,7 @@ const statusText: { [key: string]: string } = {
   pending: 'Готовится',
   done: 'Выполнен',
   created: 'Готовится',
-  cancelled: 'Отменён',
-  canceled: 'Отменён'
+  cancelled: 'Отменён'
 };
 
 export const OrderStatus: FC<OrderStatusProps> = ({ status }) => {
@@ -20,7 +19,6 @@ export const OrderStatus: FC<OrderStatusProps> = ({ status }) => {
       textStyle = '#00CCCC';
       break;
     case 'cancelled':
-    case 'canceled':
       textStyle = '#E52B1A';
       break;
     default:

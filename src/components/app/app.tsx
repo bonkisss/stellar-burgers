@@ -25,11 +25,17 @@ import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 import { checkUserAuth } from '../../services/slices/userSlice';
 import { useDispatch } from '../../services/store';
 
+const getFormattedOrderNumber = (number: string | undefined) =>
+  `#${String(Number(number)).padStart(6, '0')}`;
+
 const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const background = location.state?.background;
+  const orderModalTitle = getFormattedOrderNumber(
+    location.pathname.split('/').pop()
+  );
 
   useEffect(() => {
     dispatch(fetchIngredients());
@@ -46,7 +52,7 @@ const App = () => {
       <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
-        <Route path='/feed/:number' element={<OrderInfo />} />
+        <Route path='/feed/:number' element={<OrderInfo showNumber />} />
         <Route
           path='/login'
           element={
@@ -99,7 +105,7 @@ const App = () => {
           path='/profile/orders/:number'
           element={
             <ProtectedRoute>
-              <OrderInfo />
+              <OrderInfo showNumber />
             </ProtectedRoute>
           }
         />
@@ -119,8 +125,8 @@ const App = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal title='Детали заказа' onClose={handleModalClose}>
-                <OrderInfo />
+              <Modal title={orderModalTitle} onClose={handleModalClose}>
+                <OrderInfo showNumber={false} />
               </Modal>
             }
           />
@@ -128,8 +134,8 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <ProtectedRoute>
-                <Modal title='Детали заказа' onClose={handleModalClose}>
-                  <OrderInfo />
+                <Modal title={orderModalTitle} onClose={handleModalClose}>
+                  <OrderInfo showNumber={false} />
                 </Modal>
               </ProtectedRoute>
             }

@@ -23,10 +23,10 @@ export const Profile: FC = () => {
     }));
   }, [user]);
 
-  const isFormChanged =
-    formValue.name !== (user?.name || '') ||
-    formValue.email !== (user?.email || '') ||
-    !!formValue.password;
+  const isNameChanged = formValue.name !== (user?.name || '');
+  const isEmailChanged = formValue.email !== (user?.email || '');
+  const isPasswordChanged = !!formValue.password;
+  const isFormChanged = isNameChanged || isEmailChanged || isPasswordChanged;
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -36,13 +36,13 @@ export const Profile: FC = () => {
       password?: string;
     } = {};
 
-    if (formValue.name !== (user?.name || '')) {
+    if (isNameChanged) {
       changedUserData.name = formValue.name;
     }
-    if (formValue.email !== (user?.email || '')) {
+    if (isEmailChanged) {
       changedUserData.email = formValue.email;
     }
-    if (formValue.password) {
+    if (isPasswordChanged) {
       changedUserData.password = formValue.password;
     }
 

@@ -10,7 +10,11 @@ import {
   selectIngredients
 } from '../../services/selectors';
 
-export const OrderInfo: FC = () => {
+type TOrderInfoProps = {
+  showNumber?: boolean;
+};
+
+export const OrderInfo: FC<TOrderInfoProps> = ({ showNumber = false }) => {
   const { number } = useParams();
   const orderNumber = Number(number);
   const [loadedOrder, setLoadedOrder] = useState<TOrder | null>(null);
@@ -77,5 +81,5 @@ export const OrderInfo: FC = () => {
     return <Preloader />;
   }
 
-  return <OrderInfoUI orderInfo={orderInfo} />;
+  return <OrderInfoUI orderInfo={orderInfo} showNumber={showNumber} />;
 };
