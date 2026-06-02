@@ -1,34 +1,15 @@
 import { expect, Page, test } from '@playwright/test';
 import ingredients from './mocks/ingredients.json';
 import order from './mocks/order.json';
-import user from './mocks/user.json';
 
 const bun = ingredients.data.find((item) => item.type === 'bun')!;
 const main = ingredients.data.find((item) => item.type === 'main')!;
 const sauce = ingredients.data.find((item) => item.type === 'sauce')!;
 
 const mockApi = async (page: Page) => {
-  await page.route('**/api/ingredients', async (route) => {
-    await route.fulfill({ json: ingredients });
-  });
-
-  await page.route('**/api/auth/user', async (route) => {
-    await route.fulfill({ json: user });
-  });
-
-  await page.route('**/api/orders/all', async (route) => {
-    await route.fulfill({
-      json: { success: true, orders: [], total: 0, totalToday: 0 }
-    });
-  });
-
-  await page.route('**/api/orders', async (route) => {
-    if (route.request().method() === 'POST') {
-      await route.fulfill({ json: order });
-      return;
-    }
-
-    await route.fulfill({ json: { success: true, orders: [] } });
+  await page.routeFromHAR('./tests/hars/api.har', {
+    url: '**/api/**',
+    update: false
   });
 };
 
@@ -53,6 +34,11 @@ test.beforeEach(async ({ context, page }) => {
     window.localStorage.setItem('refreshToken', 'mock-refresh-token');
   });
   await page.goto('/');
+});
+
+test.afterEach(async ({ context, page }) => {
+  await page.evaluate(() => window.localStorage.clear());
+  await context.clearCookies();
 });
 
 test('adds bun and filling ingredients to constructor', async ({ page }) => {
